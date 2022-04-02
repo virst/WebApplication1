@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ClassLibrary1": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DB_CONN": "Server=192.168.1.119;Port=1234;Database=bibo;User Id=user0;Password=12345;Command Timeout=100"
+      }
+    }
+  }
+}

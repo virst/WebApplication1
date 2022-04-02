@@ -17,18 +17,40 @@ namespace ClassLibrary1.Data
 
         public bool InitRun { get; }
 
-
+        public static string DbConn
+        {
+            get
+            {
+                var t = Environment.GetEnvironmentVariable("DB_CONN") ??
+                    "Server=192.168.1.119;Port=5432;Database=bibo;User Id=user0;Password=12345;Command Timeout=100";
+                //Console.WriteLine($"DbConn={t}");
+                return t;
+            }
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=" + Fn);
+        {
+            options
+                .UseNpgsql(DbConn);
+            if (FirstConfig)
+                Console.WriteLine("DbConn={0}", DbConn);
+            FirstRun = false;
+        }
+
+        private static bool FirstRun = true;
+        private static bool FirstConfig = true;
 
         public BiboContext()
         {
-            Console.WriteLine("Data Source=" + Fn);
-            InitRun = Database.EnsureCreated();
-            if (!InitRun) return;
+            if (FirstRun)
+                Database.Migrate();
+            FirstRun = false;
 
-            Random rnd = new();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            Random rnd = new(3);
 
             //Bibos = new List<Bibo>();
             for (int i = 0; i < 12456;)
@@ -44,10 +66,9 @@ namespace ClassLibrary1.Data
                 b.Val5 = new string('R', rnd.Next(4, 10));
                 b.Val6 = new string('8', rnd.Next(4, 10));
 
-                Bibos.Add(b);
+                //Bibos.Add(b);
+                modelBuilder.Entity<Bibo>().HasData(b);
             }
-
-            SaveChanges();
-        }
+        }       
     }
 }
