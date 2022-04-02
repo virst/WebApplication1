@@ -1,2 +1,2 @@
 # WebApplication1
-Web Applications Уxamples
+Web Applications Examples
