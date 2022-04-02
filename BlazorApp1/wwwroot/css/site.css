@@ -1,4 +1,4 @@
-п»ї@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -64,7 +64,7 @@ a, .btn-link {
     }
 
 /*
-    РЎС‚РёР»СЊ РґР»СЏ РІС‹РІРѕРґР° С‚Р°Р±Р»РёС‡РЅС‹С… РґР°РЅРЅС‹С… РІ РґРёРІРµ, РІ С‚Р°Р±Р»РёС†Рµ СЃ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рј Р·Р°РіРѕР»РѕРІРєРѕРј
+    Стиль для вывода табличных данных в диве, в таблице с фиксированным заголовком
 */
 .pre-scrollable-table {
     overflow: auto;

@@ -1,5 +1,8 @@
 ﻿@page "/gridview"
 @using BlazorApp1.Utils
+@using ClassLibrary1.Data
+
+@inject BiboContext _context
 
 <h3>GridView</h3>
 
@@ -104,12 +107,12 @@
 
     protected override void OnParametersSet()
     {
-        int rowCount = ClassLibrary1.Models.Bibo.Bibos.Count;
+        int rowCount = _context.Bibos.Count();
         int pageCount = (int)Math.Floor((float)rowCount / CurrentSise);
 
         if (PageNum > pageCount) PageNum = 1;
 
-        Bibos = ClassLibrary1.Models.Bibo.Bibos.Skip((PageNum - 1) * CurrentSise).Take(CurrentSise);
+        Bibos = _context.Bibos.Skip((PageNum - 1) * CurrentSise).Take(CurrentSise);
 
         foreach (var b in Bibos)
         {

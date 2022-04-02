@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClassLibrary1.Data;
+using Microsoft.AspNetCore.Mvc;
 using WebMvc1.Models;
 using WebMvc1.Utils;
 
@@ -7,6 +8,11 @@ namespace WebMvc1.Controllers
     public class GridController : Controller
     {
         private int ViewCount = 3;
+        private BiboContext _context;
+        public GridController(BiboContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult List(int? CurrentSise, int? PageNum)
         {
@@ -24,12 +30,12 @@ namespace WebMvc1.Controllers
             model.Columns.Add(new Column { ColumnName = "VAL 5", PropertyName = "Val5" });
             model.Columns.Add(new Column { ColumnName = "VAL 6", PropertyName = "Val6" });
 
-            int rowCount = ClassLibrary1.Models.Bibo.Bibos.Count;
+            int rowCount = _context.Bibos.Count();
             int pageCount = (int)Math.Floor((float)rowCount / model.CurrentSise);
 
             if (PageNum > pageCount) PageNum = 1;
 
-            model.Bibos = ClassLibrary1.Models.Bibo.Bibos.Skip((model.PageNum - 1) * model.CurrentSise).Take(model.CurrentSise);
+            model.Bibos = _context.Bibos.Skip((model.PageNum - 1) * model.CurrentSise).Take(model.CurrentSise);
 
             foreach (var b in model.Bibos)
             {

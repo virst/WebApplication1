@@ -1,7 +1,10 @@
+using ClassLibrary1.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddDbContext<BiboContext>();
 
 var app = builder.Build();
 

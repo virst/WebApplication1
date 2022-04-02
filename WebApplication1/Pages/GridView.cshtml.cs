@@ -4,11 +4,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
 using System.Reflection;
 using ClassLibrary1.Models;
+using ClassLibrary1.Data;
 
 namespace WebApplication1.Pages
 {
     public class GridViewModel : PageModel
     {
+        private BiboContext _context;
+       
         public class Column
         {
             public string ColumnName { get; set; }
@@ -34,8 +37,10 @@ namespace WebApplication1.Pages
         [BindProperty(SupportsGet = true)]
         public int PageNum { get; set; }
 
-        public GridViewModel()
+        public GridViewModel(BiboContext context)
         {
+            _context = context;
+
             Columns = new List<Column>();
             Columns.Add(new Column { ColumnName = "ID", PropertyName = "Id" });
             Columns.Add(new Column { ColumnName = "Bibo Name", PropertyName = "Name" });
@@ -60,19 +65,19 @@ namespace WebApplication1.Pages
 
         public void OnGet()
         {
-            int rowCount = Bibo.Bibos.Count;
+            int rowCount = _context.Bibos.Count();
             int pageCount = (int)Math.Floor((float)rowCount / CurrentSise);
 
             if (PageNum > pageCount) PageNum = 1;
 
-            Bibos = Bibo.Bibos.Skip((PageNum - 1) * CurrentSise).Take(CurrentSise);
+            Bibos = _context.Bibos.Skip((PageNum - 1) * CurrentSise).Take(CurrentSise);
 
             foreach (var b in Bibos)
             {
                 foreach (var c in Columns)
                     c.SetProperty(b.GetType());
                 break;
-            }            
+            }
 
             int splitters = 0;
             if (PageNum > ViewCount) splitters++;
