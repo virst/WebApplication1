@@ -1,0 +1,68 @@
+﻿@page
+@using System.Data
+@model WebApplication1.Pages.GridViewModel
+@{
+}
+
+<form method="get">
+    <input type="hidden" asp-for="@Model.PageNum" />
+    <div class="row">
+        <label>
+            Строк на страницу:
+            <select class="form-select d-inline-block" style="width: 110px" asp-for="@Model.CurrentSise" asp-items="@Model.Sizes">
+            </select>
+            <button type="submit" class="btn btn-primary">ok</button>
+        </label>
+    </div>
+</form>
+
+
+<div class="pre-scrollable-table">
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (var cl in Model.Columns)
+                {
+                    <th style="@cl.Style">
+                        @cl.ColumnName
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dr in Model.Bibos)
+            {
+                <tr>
+                    @foreach (var cl in Model.Columns)
+                    {
+                        <td>@cl.Property?.GetValue(dr)</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<form method="get">
+
+    @foreach (var i in Model.Pages)
+    {
+        if (i < 0)
+        {
+            <label>...</label>
+        }
+        else if (i == Model.PageNum)
+        {
+            <label>@i</label>
+        }
+        else
+        {
+            <label>
+                <a asp-route-PageNum="@i"
+           asp-route-CurrentSise="@Model.CurrentSise"
+           class="btn btn-link">@i</a>
+            </label>
+        }
+    }
+
+</form>

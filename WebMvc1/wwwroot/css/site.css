@@ -1,0 +1,49 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/*
+    Стиль для вывода табличных данных в диве, в таблице с фиксированным заголовком
+*/
+.pre-scrollable-table {
+    overflow: auto;
+    width: 100%;
+    max-height: 80vh;
+    margin-bottom: 1px;
+}
+
+    .pre-scrollable-table td, .pre-scrollable-table th {
+        border: 1px solid black;
+        width: 100px;
+    }
+
+    .pre-scrollable-table th {
+        background-color: white;
+        text-align: center;
+    }
+
+    .pre-scrollable-table table {
+        table-layout: fixed;
+        width: 100%;
+        word-wrap: break-word;
+    }
+
+    .pre-scrollable-table thead, .pre-scrollable-table thead tr, .pre-scrollable-table thead th {
+        position: sticky;
+        top: 0;
+    }

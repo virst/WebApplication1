@@ -1,0 +1,138 @@
+﻿@page "/gridview"
+@using BlazorApp1.Utils
+
+<h3>GridView</h3>
+
+<div class="row">
+    <label>
+        Строк на страницу:
+        <select class="form-select d-inline-block" style="width: 110px" @bind-value="CurrentSise" @bind-value:event="oninput">
+            @foreach (var s in Sizes)
+            {
+                <option value="@s">@s</option>
+            }
+        </select>
+        <button type="button" class="btn btn-primary" @onclick="OnParametersSet">ok</button>
+    </label>
+</div>
+
+<div class="pre-scrollable-table">
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (var cl in Columns)
+                {
+                    <th style="@cl.Style">
+                        @cl.ColumnName
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dr in Bibos)
+            {
+                <tr>
+                    @foreach (var cl in Columns)
+                    {
+                        <td>@cl.Property?.GetValue(dr)</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    @foreach (var i in Pages)
+    {
+        if (i < 0)
+        {
+            <label>...</label>
+        }
+        else if (i == PageNum)
+        {
+            <label>@i</label>
+        }
+        else
+        {
+            <label>
+                @{
+                    var n = i;
+                    <a class="btn btn-link" @onclick="(() => {PageNum=n;OnParametersSet();})">@i</a>
+                }
+            </label>
+        }
+    }
+</div>
+
+@code {
+
+    private int ViewCount = 3;
+    public List<int> Pages = new();
+    public System.Collections.IEnumerable Bibos { get; set; }
+    public List<int> Sizes { get; set; }
+
+
+    public List<Column> Columns { get; set; }
+
+    public int CurrentSise { get; set; }
+
+    public int PageNum { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Columns = new List<Column>();
+        Columns.Add(new Column { ColumnName = "ID", PropertyName = "Id" });
+        Columns.Add(new Column { ColumnName = "Bibo Name", PropertyName = "Name" });
+        Columns.Add(new Column { ColumnName = "VAL 1", PropertyName = "Val1" });
+        Columns.Add(new Column { ColumnName = "VAL 2", PropertyName = "Val2" });
+        Columns.Add(new Column { ColumnName = "VAL 3", PropertyName = "Val3" });
+        Columns.Add(new Column { ColumnName = "VAL 4", PropertyName = "Val4" });
+        Columns.Add(new Column { ColumnName = "VAL 5", PropertyName = "Val5" });
+        Columns.Add(new Column { ColumnName = "VAL 6", PropertyName = "Val6" });
+
+
+        Sizes = new();
+        Sizes.Add(50);
+        Sizes.Add(100);
+        Sizes.Add(150);
+        Sizes.Add(200);
+        Sizes.Add(250);
+
+        CurrentSise = 100;
+        PageNum = 1;
+    }
+
+    protected override void OnParametersSet()
+    {
+        int rowCount = ClassLibrary1.Models.Bibo.Bibos.Count;
+        int pageCount = (int)Math.Floor((float)rowCount / CurrentSise);
+
+        if (PageNum > pageCount) PageNum = 1;
+
+        Bibos = ClassLibrary1.Models.Bibo.Bibos.Skip((PageNum - 1) * CurrentSise).Take(CurrentSise);
+
+        foreach (var b in Bibos)
+        {
+            foreach (var c in Columns)
+                c.SetProperty(b.GetType());
+            break;
+        }
+
+        int splitters = 0;
+        if (PageNum > ViewCount) splitters++;
+        if (PageNum < pageCount - ViewCount) splitters++;
+        if (splitters == 2) ViewCount /= 2;
+
+        for (int i = 1; i <= pageCount; i++)
+        {
+            if (i <= ViewCount || i > pageCount - ViewCount || Math.Abs(i - PageNum) < 2)
+            {
+                Pages.Add(i);
+                continue;
+            }
+            if (Pages[^1] < 0) continue;
+            Pages.Add(-1);
+        }
+    }
+
+}
